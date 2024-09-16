@@ -3,11 +3,14 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [RouterLink,ReactiveFormsModule,CommonModule],
+  imports: [RouterLink,ReactiveFormsModule,CommonModule, HttpClientModule],
+  providers: [AuthService,HttpClient],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css'
 })
@@ -17,7 +20,7 @@ export class SignupComponent {
   isText: boolean = false;
   eyeIcon: string = "fa-eye-slash"
   signupForm!: FormGroup;
-  constructor(private fb: FormBuilder){}
+  constructor(private fb: FormBuilder, private auth: AuthService){}
   ngOnInit():void{
     this.signupForm=this.fb.group({
       username:['',Validators.required],
@@ -33,9 +36,19 @@ export class SignupComponent {
     this.isText? this.type= "text": this.type="password"
 
   }
-  onSubmit(){
+  onsignup(){
     if(this.signupForm.valid){
       console.log(this.signupForm.value)
+      this.auth.signUp(this.signupForm.value)
+      .subscribe({
+        next:(res=>{
+          alert(res.message)
+        }),
+        error:(err=>{
+          alert(err?.err.messsage)
+        })
+
+      })
     }
     else{
 

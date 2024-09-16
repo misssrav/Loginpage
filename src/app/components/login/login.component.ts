@@ -2,11 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, CommonModule],
+  imports: [RouterLink, ReactiveFormsModule, CommonModule,HttpClientModule],
+  providers: [AuthService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -15,7 +18,7 @@ export class LoginComponent {
   isText: boolean = false;
   eyeIcon: string = "fa-eye-slash"
   loginForm!: FormGroup;
-  constructor(private fb: FormBuilder){}
+  constructor(private fb: FormBuilder, private auth:AuthService){}
   ngOnInit():void{
     this.loginForm=this.fb.group({
       username:['',Validators.required],
@@ -28,9 +31,18 @@ export class LoginComponent {
     this.isText? this.type= "text": this.type="password"
 
   }
-  onSubmit(){
+  onLogin(){
     if(this.loginForm.valid){
       console.log(this.loginForm.value)
+      this.auth.login(this.loginForm.value)
+      .subscribe({
+        next: (res=>{
+          alert(res.message)
+        }),
+        error:(err=>{
+          alert(err?.err.message)
+        })
+      })
     }
     else{
 
