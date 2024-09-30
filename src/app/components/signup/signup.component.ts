@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
@@ -20,7 +20,7 @@ export class SignupComponent {
   isText: boolean = false;
   eyeIcon: string = "fa-eye-slash"
   signupForm!: FormGroup;
-  constructor(private fb: FormBuilder, private auth: AuthService){}
+  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router){}
   ngOnInit():void{
     this.signupForm=this.fb.group({
       username:['',Validators.required],
@@ -42,7 +42,9 @@ export class SignupComponent {
       this.auth.signUp(this.signupForm.value)
       .subscribe({
         next:(res=>{
-          alert(res.message)
+          alert(res.message);
+          this.signupForm.reset();
+          this.router.navigate(['login'])
         }),
         error:(err=>{
           alert(err?.err.messsage)

@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { UserStoreService } from '../../services/user-store.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [RouterLink, ReactiveFormsModule, CommonModule,HttpClientModule],
-  providers: [AuthService],
+  providers: [AuthService,UserStoreService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -18,7 +19,7 @@ export class LoginComponent {
   isText: boolean = false;
   eyeIcon: string = "fa-eye-slash"
   loginForm!: FormGroup;
-  constructor(private fb: FormBuilder, private auth:AuthService){}
+  constructor(private fb: FormBuilder, private auth:AuthService, private router:Router, private userStore:UserStoreService){}
   ngOnInit():void{
     this.loginForm=this.fb.group({
       username:['',Validators.required],
@@ -37,7 +38,14 @@ export class LoginComponent {
       this.auth.login(this.loginForm.value)
       .subscribe({
         next: (res=>{
-          alert(res.message)
+          alert(res.message);
+          this.loginForm.reset();
+          this.auth.storeToken(res.token);
+          const tokenPayload = this.auth.decodeToken();
+          this.userStore.setFullNameForStore(tokenPayload.name);
+          this.userStore.setRoleForStore(tokenPayload.role);
+          
+          this.router.navigate(['dashboard'])
         }),
         error:(err=>{
           alert(err?.err.message)
