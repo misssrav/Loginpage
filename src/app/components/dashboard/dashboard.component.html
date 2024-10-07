@@ -1,14 +1,59 @@
 <nav class="navbar bg-body-tertiary">
-    <div class="container-fluid">
-      <a class="navbar-brand">iPersona</a>
-      <div>
-         <h4> Hello {{fullName}}</h4>
-      </div>
-      <input type="text" placeholder="search">
-      <div class="navbar-nav">
-        <div class="nav-item text-nowrap">
-            <a class="nav-link px-3 cursor-pointer" (click) ="logOut()">Sign Out</a>
+    <div>
+        <app-sidebar></app-sidebar>
+    </div> 
+ 
+        <a class="navbar-brand">iPersona</a>
+        <div>
+           <h4> Hello {{fullName}}</h4>
+           <a class="nav-link px-3 cursor-pointer" (click) ="logOut()">Sign Out</a>
         </div>
-      </div>
+   
+      
+       <div class = "header">
+      
+  
+        <h1 class="dashboard-title">dashboard</h1>
+        <div class="button-group">
+            <button>
+                <fa-icon [icon]="edit">
+                </fa-icon>
+                    Edit
+            </button>
+            <button class="blue_btn">
+                <fa-icon [icon]="create"></fa-icon>
+                Create
+            </button>
+        </div>
     </div>
+
+    <div class="tabs">
+        <div class="tab">All Files</div>
+        <div class="tab">Shared</div>
+        <div class="tab">File Requests</div>
+    </div>
+
+    <div class="wrapper">
+        <div class="cards-container">
+            <mat-card title="Budget" iconName = "budget"></mat-card>
+            <mat-card title="New Project" iconName=" project"></mat-card>
+            <mat-card title="Work Load" iconName="briefCase"></mat-card>
+         
+
+        </div>
+        <div class="applications-section">
+            <h1>Applications</h1>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Comapny</th>
+                    <th>Offer</th>
+                    <th>Meeting</th>
+                    <th></th>
+                </tr>
+            </table>
+        </div>
+    </div>
+
   </nav>
